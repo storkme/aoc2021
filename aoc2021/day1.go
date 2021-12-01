@@ -3,27 +3,11 @@ package aoc2021
 import (
 	"bufio"
 	"log"
-	"strconv"
 )
-
-func readNum(scanner *bufio.Scanner) int64 {
-	if scanner.Scan() {
-		num, err := strconv.ParseInt(scanner.Text(), 10, 64)
-
-		if err != nil {
-			log.Fatalf("Failed to parse input%v", err)
-		}
-
-		return num
-	}
-	return -1
-}
 
 func Part1(scanner *bufio.Scanner) {
 	counter := 0
-	current := int64(0)
-
-	for prev := readNum(scanner); prev != -1 && current != -1; prev = current {
+	for current, prev := 0, readNum(scanner); prev != -1 && current != -1; prev = current {
 		current = readNum(scanner)
 		if current > prev {
 			counter++
@@ -33,30 +17,14 @@ func Part1(scanner *bufio.Scanner) {
 	log.Println(counter)
 }
 
-func ReadInts(scanner bufio.Scanner) ([]int, error) {
-	scanner.Split(bufio.ScanWords)
-	var result []int
-	for scanner.Scan() {
-		x, err := strconv.Atoi(scanner.Text())
-		if err != nil {
-			return result, err
-		}
-		result = append(result, x)
-	}
-	return result, scanner.Err()
-}
-
-func Part2(scanner *bufio.Scanner) {
+func Part2(s *bufio.Scanner) {
 	counter := 0
-	stuff, err := ReadInts(*scanner)
-	if err != nil {
-		log.Fatalf("Failed to read ints from input: %v", err)
-	}
-	for i := 0; i < len(stuff)-3; i++ {
-		a, b := stuff[i]+stuff[i+1]+stuff[i+2], stuff[i+1]+stuff[i+2]+stuff[i+3]
-		if b > a {
+
+	for a, b, c, d := readNum(s), readNum(s), readNum(s), readNum(s); d != -1; a, b, c, d = b, c, d, readNum(s) {
+		if b+c+d > a+b+c {
 			counter++
 		}
 	}
+
 	log.Println(counter)
 }
